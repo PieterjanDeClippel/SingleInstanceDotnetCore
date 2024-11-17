@@ -5,7 +5,7 @@ namespace WinFormsApp1
         public Form1()
         {
             InitializeComponent();
-            ApplicationDeployment
+            //ApplicationDeployment
         }
     }
 }
