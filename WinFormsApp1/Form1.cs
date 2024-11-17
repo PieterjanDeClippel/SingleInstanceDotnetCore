@@ -5,7 +5,16 @@ namespace WinFormsApp1
         public Form1()
         {
             InitializeComponent();
-            //ApplicationDeployment
+            Shown += Form1_Shown;
+        }
+
+        private void Form1_Shown(object? sender, EventArgs e)
+        {
+            var variables = Environment.GetEnvironmentVariables();
+            foreach (var variable in variables)
+            {
+                MessageBox.Show(variable.ToString());
+            }
         }
     }
 }
