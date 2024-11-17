@@ -20,11 +20,9 @@ internal static class Program
         ApplicationConfiguration.Initialize();
         if (mutex.WaitOne(TimeSpan.FromMilliseconds(10), true))
         {
-            var server = new NamedPipeServerStream("pipe-f7f257d8-da2f-4562-8874-84ecc9008f4f", PipeDirection.InOut, 1, PipeTransmissionMode.Message, PipeOptions.CurrentUserOnly | PipeOptions.Asynchronous);
-            AcceptConnection(server);
-
+            StartServer();
             Application.Run(new Form1());
-            server.Dispose();
+            //server.Dispose();
             mutex.ReleaseMutex();
         }
         else
@@ -33,14 +31,15 @@ internal static class Program
         }
     }
 
-    private static void AcceptConnection(NamedPipeServerStream server)
+    private static void StartServer()
     {
+        var server = new NamedPipeServerStream("pipe-f7f257d8-da2f-4562-8874-84ecc9008f4f", PipeDirection.InOut, 100, PipeTransmissionMode.Message, PipeOptions.CurrentUserOnly | PipeOptions.Asynchronous);
         server.BeginWaitForConnection((result) =>
         {
             server.EndWaitForConnection(result);
             var serverState = (NamedPipeServerStream)result.AsyncState!;
 
-            AcceptConnection(serverState);
+            StartServer();
 
             var buffer = new byte[bufSize];
             ReadData(serverState, buffer);
